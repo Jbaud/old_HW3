@@ -75,7 +75,7 @@ main(int argc, char** argv) {
 
     int         source;    /* Process sending integral  */
 
-    int         dest = 0;  /* All messages go to 0      */
+   
 
     int         tag = 0;
 
@@ -99,9 +99,16 @@ main(int argc, char** argv) {
 
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
+
+
     /* Find out how many processes are being used */
 
     MPI_Comm_size(MPI_COMM_WORLD, &p);
+
+    printf("this is my rank and this is my p : %d %d \n",my_rank,p);
+
+
+    int         dest = (p-1);  /* All messages go to 0      */
 
 
     Get_data(&a, &b, &n, my_rank, p);
@@ -127,11 +134,11 @@ main(int argc, char** argv) {
 
 /* Add up the integrals calculated by each process */ 
 
-if (my_rank == 0) {
+if (my_rank == (p-1) ) {
 
         total = integral;
 
-        for (source = 1; source < p; source++) {
+        for (source = 0; source < (p-1); source++) {
 
             MPI_Recv(&integral, 1, MPI_FLOAT, source, tag, 
 
@@ -152,7 +159,9 @@ if (my_rank == 0) {
 
     /* Print the result */
 
-    if (my_rank == 0) {
+    if (my_rank == (p-1) ) {
+
+        printf("this is master my rank is my_rank =%d \n",my_rank);
 
         printf("With n = %d trapezoids, our estimate\n", 
 
@@ -218,7 +227,7 @@ void Get_data(
          int     p        /* in  */) {
 
 
-    int source = 0;    /* All local variables used by */
+    int source = (p-1);    /* All local variables used by */
 
     int dest;          /* MPI_Send and MPI_Recv       */
 
@@ -227,13 +236,13 @@ void Get_data(
     MPI_Status status;
 
 
-    if (my_rank == 0){
+    if (my_rank == (p-1) ){
 
         *a_ptr = A;
         *b_ptr = B;
         *n_ptr = N;
 
-        for (dest = 1; dest < p; dest++){
+        for (dest = 0; dest < (p-1); dest++){
 
             tag = 0;
 
