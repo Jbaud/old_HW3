@@ -108,7 +108,7 @@ main(int argc, char** argv) {
     printf("this is my rank and this is my p : %d %d \n",my_rank,p);
 
 
-    int         dest = (p-1);  /* All messages go to 0      */
+    int         dest = (p-1);  /* All messages go to (p-1)     */
 
 
     Get_data(&a, &b, &n, my_rank, p);
